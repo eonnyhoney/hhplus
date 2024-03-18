@@ -31,12 +31,21 @@ function JuniorEngineer(health, intelligence) {
 }
 //- 생성자 함수는 수정하지 마세요
 
-// 여기에 코드를 작성하세요
-// TO-DO
-//- 여기에 코드를 작성하세요
-
-
-
+Worker.prototype.getHealth = function () {
+  return this._health
+}
+Worker.prototype.work = function () {
+  this._health--
+}
+JuniorEngineer.prototype = Object.create(Worker.prototype);
+JuniorEngineer.prototype._super = Worker.prototype.constructor
+JuniorEngineer.prototype.work = function() {
+  Worker.prototype.work.call(this)
+  this._intelligence++
+}
+JuniorEngineer.prototype.getIntelligence = function() {
+  return this._intelligence
+}
 
 
 
