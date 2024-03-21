@@ -53,20 +53,21 @@ describe("hooks test", () => {
 
       let result = "";
       const render = vi.fn(() => {
-        const [a, setA] = useState("foo");
-        const [b, setB] = useState("bar");
+        const [a, setA] = useState("foo");  // 3. useState를 실행하면서 states 배열에 값을 넣는다. -> states = ["foo"], currentIndex = 1, return: [states[0], (newState) => { ... }]
+        const [b, setB] = useState("bar");  // 4. useState를 실행하면서 states 배열에 값을 넣는다. -> states = ["foo", "bar"], currentIndex = 2, return: [states[1], (newState) => { ... }]
 
-        result = `a: ${a}, b: ${b}`;
+        result = `a: ${a}, b: ${b}`;  // 5. `a: states[0], b: states[1]`
 
         return { setA, setB };
       });
 
-      const { useState, resetContext } = createHooks(render);
+      const { useState, resetContext } = createHooks(render);  // 1. createHooks 에 callback으로 render 함수를 넘겨 useState, resetContext를 받는다.
 
-      const { setA, setB } = render();
+      const { setA, setB } = render();  // 2. render 함수를 실행한다.
 
       expect(result).toBe(`a: foo, b: bar`);
 
+      // states: ["foo", "bar"], currentIndex: 2
       resetContext();
       setA("foo-change");
       expect(result).toBe(`a: foo-change, b: bar`);
