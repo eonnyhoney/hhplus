@@ -15,6 +15,16 @@ export function createHooks(callback) {
     memoContext.current = 0;
   }
 
+  let isScheduled = false
+  const batchRender = () => {
+    if (!isScheduled) {
+      isScheduled = true
+      requestAnimationFrame(() => {
+        callback()
+        isScheduled = false
+      })
+    }
+  }
   const useState = (initState) => {
     const { current, states } = stateContext;
     stateContext.current += 1;
@@ -23,10 +33,9 @@ export function createHooks(callback) {
 
     const setState = (newState) => {
       if (newState === states[current]) return;
-      states[current] = newState;
-      callback();
+        states[current] = newState;
+      batchRender()
     };
-
     return [states[current], setState];
   };
 
